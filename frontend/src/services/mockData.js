@@ -343,54 +343,119 @@ export const handleMockRequest = async (method, url, data) => {
       activeEmployees: store.employees.filter((e) => e.employmentStatus === 'Active').length,
       inactiveEmployees: store.employees.filter((e) => e.employmentStatus !== 'Active').length,
       presentToday: 4,
-      absentToday: 1,
+      absentToday: 0,
       onLeaveToday: 1,
+      lateArrivals: 1,
       lateToday: 1,
       departmentCount: store.departments.length,
       newJoinersCount: 2,
-      monthlyPayrollTotal: store.payroll.reduce((acc, p) => acc + (p.netSalary || 0), 0),
-      pendingLeavesCount: store.leaves.filter((l) => l.status === 'Pending').length
+      monthlyPayrollTotal: 46910,
+      pendingLeaveApprovals: 1,
+      pendingLeavesCount: 1
     };
 
-    const dashCharts = {
-      departmentDistribution: store.departments.map((d) => ({
-        name: d.name,
-        count: store.employees.filter((e) => e.department?.name === d.name || e.department?.code === d.code).length || 1
-      })),
-      monthlyAttendanceTrends: [
-        { month: 'Jun', present: 94, absent: 3, late: 3 },
-        { month: 'Jul', present: 95, absent: 2, late: 3 },
-        { month: 'Aug', present: 92, absent: 5, late: 3 },
-        { month: 'Sep', present: 96, absent: 2, late: 2 },
-        { month: 'Oct', present: 97, absent: 1, late: 2 }
+    const deptDistribution = store.departments.map((d) => ({
+      name: d.name,
+      count: store.employees.filter((e) => e.department?.name === d.name || e.department?.code === d.code).length || 1
+    }));
+
+    const attendanceTrends = [
+      { date: 'Mon, Oct 23', present: 4, late: 0, onLeave: 1 },
+      { date: 'Tue, Oct 24', present: 5, late: 1, onLeave: 0 },
+      { date: 'Wed, Oct 25', present: 5, late: 0, onLeave: 0 },
+      { date: 'Thu, Oct 26', present: 4, late: 1, onLeave: 1 },
+      { date: 'Fri, Oct 27', present: 5, late: 0, onLeave: 0 },
+      { date: 'Sat, Oct 28', present: 2, late: 0, onLeave: 0 },
+      { date: 'Sun, Oct 29', present: 4, late: 1, onLeave: 1 }
+    ];
+
+    const payrollHistory = [
+      { period: 'Jun 2026', gross: 42000, net: 38000 },
+      { period: 'Jul 2026', gross: 45000, net: 41000 },
+      { period: 'Aug 2026', gross: 45000, net: 41000 },
+      { period: 'Sep 2026', gross: 52040, net: 46910 },
+      { period: 'Oct 2026', gross: 52040, net: 46910 }
+    ];
+
+    const leaveStats = [
+      { name: 'Casual Leave', totalDays: 4, color: '#3B82F6' },
+      { name: 'Sick Leave', totalDays: 2, color: '#EF4444' },
+      { name: 'Annual Leave', totalDays: 6, color: '#10B981' }
+    ];
+
+    const upcomingHolidays = [
+      { _id: 'hol_5', name: 'Thanksgiving Day', date: '2026-11-26', holidayType: 'National' },
+      { _id: 'hol_6', name: 'Christmas Day', date: '2026-12-25', holidayType: 'Public' },
+      { _id: 'hol_1', name: "New Year's Day", date: '2027-01-01', holidayType: 'Public' }
+    ];
+
+    const recentJoiners = store.employees.slice(0, 4).map((emp) => ({
+      _id: emp._id,
+      firstName: emp.firstName,
+      lastName: emp.lastName,
+      employeeId: emp.employeeId,
+      designation: emp.designation,
+      department: emp.department
+    }));
+
+    const recentActivity = [
+      {
+        _id: 'act_1',
+        actor: { email: 'admin@ecotrack.internal', role: 'ADMIN' },
+        description: 'Marcus Vance signed in to ECO TRACK Admin Console',
+        createdAt: new Date(Date.now() - 1000 * 60 * 15).toISOString()
+      },
+      {
+        _id: 'act_2',
+        actor: { email: 'hr@ecotrack.internal', role: 'HR' },
+        description: 'Sarah Jenkins approved Casual Leave for Priya Sharma',
+        createdAt: new Date(Date.now() - 1000 * 60 * 45).toISOString()
+      },
+      {
+        _id: 'act_3',
+        actor: { email: 'manager@ecotrack.internal', role: 'MANAGER' },
+        description: 'David Chen created Q4 engineering performance goal',
+        createdAt: new Date(Date.now() - 1000 * 60 * 120).toISOString()
+      },
+      {
+        _id: 'act_4',
+        actor: { email: 'admin@ecotrack.internal', role: 'ADMIN' },
+        description: 'October 2026 payroll batch finalized & pay slips released',
+        createdAt: new Date(Date.now() - 1000 * 60 * 240).toISOString()
+      }
+    ];
+
+    const employeeSpecific = {
+      todayAttendance: {
+        status: 'Present',
+        checkIn: new Date(new Date().setHours(9, 2, 0)).toISOString(),
+        workingHours: 7.8
+      },
+      activeGoals: [
+        { _id: 'g1', title: 'Complete ECO TRACK Architecture Review', progress: 85 },
+        { _id: 'g2', title: 'Optimize API Response Times', progress: 60 }
       ],
-      employeeGrowth: [
-        { month: 'Jun', total: 3 },
-        { month: 'Jul', total: 4 },
-        { month: 'Aug', total: 4 },
-        { month: 'Sep', total: 5 },
-        { month: 'Oct', total: 5 }
-      ],
-      payrollExpenses: [
-        { month: 'Jun', amount: 38000 },
-        { month: 'Jul', amount: 41000 },
-        { month: 'Aug', amount: 41000 },
-        { month: 'Sep', amount: 46910 },
-        { month: 'Oct', amount: 46910 }
-      ],
-      leaveStats: [
-        { type: 'Casual Leave', count: 4 },
-        { type: 'Sick Leave', count: 2 },
-        { type: 'Annual Leave', count: 6 },
-        { type: 'Emergency Leave', count: 1 }
+      pendingLeaves: [
+        { _id: 'l1', leaveType: 'Annual Leave', days: 3, status: 'Pending' }
       ]
     };
 
     const dashPayload = {
       stats: dashStats,
-      charts: dashCharts,
-      recentActivities: store.auditLogs.slice(0, 5),
-      upcomingHolidays: store.holidays.slice(0, 3)
+      charts: {
+        deptDistribution,
+        departmentDistribution: deptDistribution,
+        attendanceTrends,
+        monthlyAttendanceTrends: attendanceTrends,
+        payrollHistory,
+        payrollExpenses: payrollHistory,
+        leaveStats
+      },
+      upcomingHolidays,
+      recentJoiners,
+      recentActivity,
+      recentActivities: recentActivity,
+      employeeSpecific
     };
 
     return {
