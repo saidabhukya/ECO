@@ -1,0 +1,26 @@
+{
+  "name": "eco-track",
+  "version": "1.0.0",
+  "description": "ECO TRACK — Complete Employee Management System",
+  "scripts": {
+    "dev": "concurrently -n \"API,VITE\" -c \"red,cyan\" \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm start",
+    "dev:frontend": "cd frontend && npm run dev",
+    "seed": "cd backend && npm run seed",
+    "create-admin": "cd backend && npm run create-admin",
+    "test": "cd backend && npm test",
+    "build": "cd frontend && npm run build"
+  },
+  "keywords": [
+    "employee-management",
+    "hr",
+    "payroll",
+    "attendance",
+    "eco-track"
+  ],
+  "author": "ECO TRACK Engineering Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
