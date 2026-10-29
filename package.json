@@ -9,7 +9,8 @@
     "seed": "cd backend && npm run seed",
     "create-admin": "cd backend && npm run create-admin",
     "test": "cd backend && npm test",
-    "build": "cd frontend && npm run build"
+    "build": "cd frontend && npm run build",
+    "deploy": "node scripts/deploy-pages.js"
   },
   "keywords": [
     "employee-management",
